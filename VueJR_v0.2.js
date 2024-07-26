@@ -1,10 +1,9 @@
-// Include Vue CDN - v3.4.34.
 var script = document.createElement('script');
 script.type = 'text/javascript';
 script.src = 'https://cdn.jsdelivr.net/npm/vue@3.4.34/dist/vue.global.prod.js';
 
 script.onload = function() {
-    const { createApp, ref, h } = Vue;
+    const { createApp, ref, h, onMounted } = Vue;
 
     const MyComponent = {
         setup() {
@@ -12,6 +11,11 @@ script.onload = function() {
             const myFunction = () => {
                 console.log('Hola!');
             }
+
+            onMounted(() => {
+                console.log('Component mounted');
+            });
+
             return {
                 message,
                 myFunction
@@ -20,6 +24,7 @@ script.onload = function() {
         template: `
             <div class="bg-blue-200 p-4 rounded-md my-component">
                 <h1 class="text-2xl text-blue-800">{{ message }}</h1>
+                <button @click="myFunction" class="bg-blue-500 text-white px-4 py-2 mt-4 rounded">Click Me</button>
             </div>
         `,
         mounted(){
