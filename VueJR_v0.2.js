@@ -8,23 +8,45 @@ script.onload = function() {
     const MyComponent = {
         setup() {
             const message = ref('Hola!!!');
+            const users = ref([]); // Reactive array to hold user data
+
             const myFunction = () => {
                 console.log('Hola!');
             }
-
-            onMounted(() => {
+            onMounted(async () => {
                 console.log('Component mounted');
+                try {
+                    const response = await fetch('https://demo8895593.mockable.io/users');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    users.value = data;
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                    users.value = [];
+                }
             });
-
             return {
                 message,
-                myFunction
+                myFunction,
+                users
             };
         },
         template: `
             <div class="bg-blue-200 p-4 rounded-md my-component">
                 <h1 class="text-2xl text-blue-800">{{ message }}</h1>
                 <button @click="myFunction" class="bg-blue-500 text-white px-4 py-2 mt-4 rounded">Click Me</button>
+                <div class="mt-4">
+                    <h2 class="text-xl">User List:</h2>
+                    <ul>
+                        <li v-for="user in users" :key="user.id" class="mt-2">
+                            <strong>Name:</strong> {{ user.name }} <br>
+                            <strong>Email:</strong> {{ user.email }} <br>
+                            <strong>Permission:</strong> {{ user.permission }}
+                        </li>
+                    </ul>
+                </div>
             </div>
         `,
         mounted(){
